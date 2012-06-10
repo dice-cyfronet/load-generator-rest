@@ -1,0 +1,8 @@
+bind:               0.0.0.0                              # which interface to bind
+port:               1234                                 # which port to listen on
+load_generator:     active                               # should load be active or passive?
+scenario:           Load                                 # Load | Time
+distribution:
+    type:         Normal                                 # Normal | F | Const | LogPlayer
+    mean:           10.0
+    sigma:           3.0

@@ -1,0 +1,81 @@
+= mockup-service
+
+<b>Mock-Up service</b> is an app simulate HTTP computational service, which will simulate CPU load or delay of aplications with a given characteristic. 
+
+Characteristics can be:
+ * constant time,
+ * Normal or F distribution,
+ * historical logfile with response times.
+
+App acts as HTTP server responding to GET or POST request.
+
+== Building gem
+
+Install dependencies using `bundle install` then `parka bundle` to build gem.
+
+== Usage
+  Usage: mockup [options]
+      -c, --config FILE                YAML-based configuration file example
+      -v, --[no-]verbose               Verbose logging (for debugging)
+      -d, --[no-]dev                   Development environment
+        
+== Scenario types and distributions
+
+We have created a few scenario configurations which could be used with various settings.
+
+=== Scenarios
+There are two scenario types (see scenario label in config file):
+*Load*::  simmulating calculations with specified relative complexity (actual time depends on actual CPU usage)
+
+          Computation complexity factor is specified by distribution function.
+
+*Time*::  generating load/delay for specific period of time (doesn't depend on actual CPU usage)
+          
+          Computation complexity factor is specified by distribution function.
+	
+<em>For usage in specific case please study our examples from doc/</em>
+
+=== Load Generators
+You can switch between generators:
+*active*:: load is simmulated by simple arithmetic operation,
+*passive*:: no CPU load is generated - only a response delay (app only sleeps for specified period of time)
+
+=== Distribution (argument) generators	
+There are following distribution generators:
+*Normal*:: Normal (Gaussian) distribution with *mean* and *sigma* arguments
+*F*:: F distribution with *df1*, *df2* and *f* arguments
+*LogPlayer*:: Random elements from text file
+*Const*:: Always the same value
+
+== Configuration
+
+Configuration resides in YAML-based configuration file.
+
+Below we present example load config file and then time oriented config time.
+
+For more example configurations goto <tt>doc/</tt>.
+
+  bind:               0.0.0.0                              # which interface to bind
+  port:               1234                                 # which port to listen on
+  load_generator:     active                               # should load be active or passive?
+  scenario:           Load                                 # Load | Time
+  distribution:
+      type:         Normal                                 # Normal | F | Const | LogPlayer
+      mean:           10.0
+      sigma:           3.0
+	
+See this configuration in file - link:doc/example_normal_time.yaml.
+
+  bind:               0.0.0.0                              # which interface to bind
+  port:               1234                                 # which port to listen on
+  load_generator:     active                               # should load be active or passive?
+  scenario:           Time                                 # Load | Time
+  distribution:
+      type:         LogPlayer                              # Normal | F | Const | LogPlayer
+      file:         "mockup/doc/example_log.txt"
+See this configuration in file - link:doc/example_log_file.yaml.
+
+	
+Note that presented above configuration file is specific one, which requires additional file with log times. (example see link:doc/example_log.txt.) 	
+	
+
